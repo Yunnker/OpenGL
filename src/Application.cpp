@@ -42,7 +42,7 @@ int main(void)
 
     glfwSwapInterval(1); //Turns on the v-sync
 
-    if (glewInit() != GLEW_OK) //Initialize the GLEW libraryy
+    if (glewInit() != GLEW_OK) //Initialize the GLEW libraryyy
         std::cout << "GLEW is not okay!" << std::endl;
 
     std::cout << glGetString(GL_VERSION) << std::endl; //Prints out the OpenGL version
