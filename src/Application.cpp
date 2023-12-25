@@ -1,5 +1,5 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+﻿#include <GL/glew.h>        //OpenGL Extension Wrangler - OpenGL loader
+#include <GLFW/glfw3.h>     //OpenGL
 
 #include <iostream>
 #include <string>
@@ -17,13 +17,13 @@
 
 int main(void)
 {
-    GLFWwindow* window;
+    GLFWwindow* window; 
 
     /* Initialize the library */
     if (!glfwInit())
         return -1;
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);                  //Sets the OpenGL version
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
@@ -40,14 +40,14 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    glfwSwapInterval(1);
+    glfwSwapInterval(1); //Turns on the v-sync
 
-    if (glewInit() != GLEW_OK)
+    if (glewInit() != GLEW_OK) //Initialize the GLEW library
         std::cout << "GLEW is not okay!" << std::endl;
 
-    std::cout << glGetString(GL_VERSION) << std::endl;
+    std::cout << glGetString(GL_VERSION) << std::endl; //Prints out the OpenGL version
     {
-
+        /* Positions of our triangles */
         float positions[] = {
             -1.0f, -1.0f, // 0
              1.0f, -1.0f, // 1
@@ -55,6 +55,7 @@ int main(void)
             -1.0f,  1.0f, // 3
         };
 
+        /* Faces */
         unsigned int indices[] = {
             0, 1, 2,
             2, 3, 0
