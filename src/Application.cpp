@@ -42,7 +42,7 @@ int main(void)
 
     glfwSwapInterval(1); //Turns on the v-sync
 
-    if (glewInit() != GLEW_OK) //Initialize the GLEW libraryyy
+    if (glewInit() != GLEW_OK) //Initialize the GLEW library
         std::cout << "GLEW is not okay!" << std::endl;
 
     std::cout << glGetString(GL_VERSION) << std::endl; //Prints out the OpenGL version
@@ -61,29 +61,25 @@ int main(void)
             2, 3, 0
         };
 
-        VertexArray va;
-        VertexBuffer vb(positions, 4 * 2 * sizeof(float));
-
-        VertexBufferLayout layout;
-        layout.Push<float>(2);
-        va.AddBuffer(vb, layout);
+        VertexArray va;                                         //Creates a vertex array
+        VertexBuffer vb(positions, 4 * 2 * sizeof(float));      //Creates vertex buffer of size 4 times 2 collumns of floats
+        VertexBufferLayout layout;                              //Creates a layout
+        layout.Push<float>(2);                                  //Sets the layout to 2 floats
+        va.AddBuffer(vb, layout);                               //Adds the vertex buffer with layout to vertex array
+        IndexBuffer ib(indices, 6);                             //Creates the Index buffer that stores the faces
         
+        Shader shader("res/shaders/Basic.shader");              //Creates a shader object and loads it with Basic.shader
+        shader.Bind();                                          //Selects the shader to set uniform
+        shader.SetUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f); //Sets the values to uniform
 
 
-        IndexBuffer ib(indices, 6);
-
-
-        
-        Shader shader("res/shaders/Basic.shader");
-        shader.Bind();
-        shader.SetUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
-
-
+        /* Unbinding of everything */
         va.Unbind();
         shader.Unbind();
         vb.Unbind();
         ib.Unbind();
 
+        /* Variables to modify the shader by uniform */
         float r = 0.0f;
         float increment = 0.005f;
         /* Loop until the user closes the window */
@@ -92,17 +88,16 @@ int main(void)
             /* Render here */
             glClear(GL_COLOR_BUFFER_BIT);
 
-            shader.Bind();
-            shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
+            shader.Bind();                                          //Selects the shader we are using
+            shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);    //Changes the value of the uniform
 
-            va.Bind();
-
-            ib.Bind();
-
-
-            GlCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+            va.Bind();                                              //Selects the vertices
+            ib.Bind();                                              //Selects the faces
 
 
+            GlCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));  //Draws the triangles
+
+            /* Incrementing and decrementing the uniform  */
             if (r > 1.0f)
                 increment = -0.005f;
             else if (r < 0.0f)
