@@ -6,19 +6,20 @@
 #include <fstream>
 #include <sstream>
 
-#include "Renderer.h"
 
+#include "Renderer.h"
+#include "VertexBufferLayout.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 
 #include "Shader.h"
+#include "Texture.h"
 
 
 int main(void)
 {
-    GLFWwindow* window; 
-
+    GLFWwindow* window;
     /* Initialize the library */
     if (!glfwInit())
         return -1;
@@ -49,10 +50,10 @@ int main(void)
     {
         /* Positions of our triangles */
         float positions[] = {
-            -1.0f, -1.0f, // 0
-             1.0f, -1.0f, // 1
-             1.0f,  1.0f, // 2
-            -1.0f,  1.0f, // 3
+            -1.0f, -1.0f, 0.0f, 0.0f, // 0
+             1.0f, -1.0f, 1.0f, 0.0f, // 1
+             1.0f,  1.0f, 1.0f, 1.0f, // 2
+            -1.0f,  1.0f, 0.0f, 1.0f, // 3
         };
 
         /* Faces */
@@ -62,9 +63,10 @@ int main(void)
         };
 
         VertexArray va;                                         //Creates a vertex array
-        VertexBuffer vb(positions, 4 * 2 * sizeof(float));      //Creates vertex buffer of size 4 times 2 collumns of floats
+        VertexBuffer vb(positions, 4 * 4 * sizeof(float));      //Creates vertex buffer of size 4 times 2 columns of floats
         VertexBufferLayout layout;                              //Creates a layout
-        layout.Push<float>(2);                                  //Sets the layout to 2 floats
+        layout.Push<float>(2);                                  //Adds 2 floats to the layout 
+		layout.Push<float>(2);                                  
         va.AddBuffer(vb, layout);                               //Adds the vertex buffer with layout to vertex array
         IndexBuffer ib(indices, 6);                             //Creates the Index buffer that stores the faces
         
@@ -72,12 +74,17 @@ int main(void)
         shader.Bind();                                          //Selects the shader to set uniform
         shader.SetUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f); //Sets the values to uniform
 
+        Texture texture("res/textures/clue.png");
+        texture.Bind();
+        shader.SetUniform1i("u_Texture", 0);
 
         /* Unbinding of everything */
         va.Unbind();
         shader.Unbind();
         vb.Unbind();
         ib.Unbind();
+
+        Renderer renderer;
 
         /* Variables to modify the shader by uniform */
         float r = 0.0f;
@@ -86,16 +93,14 @@ int main(void)
         while (!glfwWindowShouldClose(window))
         {
             /* Render here */
-            glClear(GL_COLOR_BUFFER_BIT);
+            renderer.Clear();
 
             shader.Bind();                                          //Selects the shader we are using
             shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);    //Changes the value of the uniform
 
-            va.Bind();                                              //Selects the vertices
-            ib.Bind();                                              //Selects the faces
+            renderer.Draw(va, ib, shader);
 
 
-            GlCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));  //Draws the triangles
 
             /* Incrementing and decrementing the uniform  */
             if (r > 1.0f)
