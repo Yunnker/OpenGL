@@ -16,6 +16,8 @@
 #include "Shader.h"
 #include "Texture.h"
 
+#include "vendor/stb_image/stb_image.h"
+
 
 int main(void)
 {
@@ -48,6 +50,12 @@ int main(void)
 
     std::cout << glGetString(GL_VERSION) << std::endl; //Prints out the OpenGL version
     {
+		GLFWimage images[1];
+		images[0].pixels = stbi_load("res/textures/clue.png", &images[0].width, &images[0].height, 0, 4); //rgba channels 
+		glfwSetWindowIcon(window, 1, images);
+		stbi_image_free(images[0].pixels);
+
+
         /* Positions of our triangles */
         float positions[] = {
             -1.0f, -1.0f, 0.0f, 0.0f, // 0
@@ -61,6 +69,9 @@ int main(void)
             0, 1, 2,
             2, 3, 0
         };
+
+        GlCall(glEnable(GL_BLEND));
+        GlCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
         VertexArray va;                                         //Creates a vertex array
         VertexBuffer vb(positions, 4 * 4 * sizeof(float));      //Creates vertex buffer of size 4 times 2 columns of floats
