@@ -6,7 +6,6 @@
 #include <fstream>
 #include <sstream>
 
-
 #include "Renderer.h"
 #include "VertexBufferLayout.h"
 #include "VertexBuffer.h"
@@ -24,7 +23,7 @@
 #include "imgui/imgui_impl_opengl3.h"
 
 #include "tests/TestClearColor.h"
-
+#include "tests/TestTexture2D.h"
 
 int main(void)
 {
@@ -37,7 +36,6 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(960, 540, "WE ARE SO BARACK", NULL, NULL);
     if (!window)
@@ -45,8 +43,6 @@ int main(void)
         glfwTerminate();
         return -1;
     }
-    
-
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
@@ -73,6 +69,7 @@ int main(void)
         currentTest = testMenu;
 
         testMenu->RegisterTest<test::TestClearColor>("Clear Color");
+        testMenu->RegisterTest<test::TestTexture2D>("2D Texture");
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
